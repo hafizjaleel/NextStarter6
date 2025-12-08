@@ -101,7 +101,7 @@ export default function CoursesPage() {
 
       {/* Courses Grid */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {courses.map((course) => (
+        {paginatedCourses.map((course) => (
           <CourseCard
             key={course.id}
             title={course.title}
@@ -114,6 +114,23 @@ export default function CoursesPage() {
             updated={course.updated}
           />
         ))}
+      </div>
+
+      {/* Pagination */}
+      <div className="flex items-center justify-between border-t border-slate-100 pt-6">
+        <p className="text-sm text-slate-600">
+          Showing {startIndex + 1} to {Math.min(startIndex + ITEMS_PER_PAGE, courses.length)} of {courses.length} courses
+        </p>
+        <Pagination>
+          <PaginationPrevious
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+          />
+          <PaginationNext
+            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+          />
+        </Pagination>
       </div>
     </div>
   );
