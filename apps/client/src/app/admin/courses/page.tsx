@@ -1,39 +1,52 @@
 'use client';
 
 import { Search, Filter } from 'lucide-react';
+import { CourseCard } from './components/course-card';
 
 const courses = [
   {
     id: 1,
     title: 'Advanced React Development',
-    instructor: 'John Smith',
+    description: 'Master React hooks, state management, and performance optimization',
+    category: 'Development',
+    difficulty: 'Advanced' as const,
     students: 234,
     episodes: 12,
-    price: '$99',
+    badge: '12 lessons',
+    updated: 'Updated 2 days ago',
   },
   {
     id: 2,
     title: 'UI/UX Design Fundamentals',
-    instructor: 'Sarah Chen',
+    description: 'Learn modern design principles and tools for creating stunning interfaces',
+    category: 'Design',
+    difficulty: 'Beginner' as const,
     students: 156,
     episodes: 8,
-    price: '$79',
+    badge: '8 lessons',
+    updated: 'Updated 1 week ago',
   },
   {
     id: 3,
     title: 'Full Stack Web Development',
-    instructor: 'Mike Johnson',
+    description: 'Complete guide to building production-ready web applications',
+    category: 'Development',
+    difficulty: 'Advanced' as const,
     students: 412,
     episodes: 24,
-    price: '$129',
+    badge: '24 lessons',
+    updated: 'Updated 3 days ago',
   },
   {
     id: 4,
     title: 'JavaScript Mastery',
-    instructor: 'Alex Davis',
+    description: 'Deep dive into JavaScript fundamentals and advanced patterns',
+    category: 'Programming',
+    difficulty: 'Intermediate' as const,
     students: 189,
     episodes: 16,
-    price: '$89',
+    badge: '16 lessons',
+    updated: 'Updated 5 days ago',
   },
 ];
 
