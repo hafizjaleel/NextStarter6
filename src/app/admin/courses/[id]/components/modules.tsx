@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ChevronRight, Plus, Edit2, Trash2 } from 'lucide-react';
 import { SidePanel } from '@/components/side-panel';
+import { ConfirmDialog } from '@/components/confirm-dialog';
 
 const initialModules = [
   {
