@@ -225,6 +225,7 @@ export function CourseOverview() {
       </div>
 
       {/* Two Column Layout */}
+      {!isEditing && (
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Left Column - Basic Info */}
         <div className="rounded-xl border border-slate-100 bg-white p-6 shadow-sm">
@@ -236,15 +237,15 @@ export function CourseOverview() {
             </div>
             <div>
               <p className="text-xs text-slate-500 uppercase tracking-wider">Category</p>
-              <p className="text-sm font-medium text-slate-900 mt-1">Development</p>
+              <p className="text-sm font-medium text-slate-900 mt-1">{formData.category}</p>
             </div>
             <div>
               <p className="text-xs text-slate-500 uppercase tracking-wider">Level</p>
-              <p className="text-sm font-medium text-slate-900 mt-1">Advanced</p>
+              <p className="text-sm font-medium text-slate-900 mt-1">{formData.level}</p>
             </div>
             <div>
               <p className="text-xs text-slate-500 uppercase tracking-wider">Price</p>
-              <p className="text-sm font-medium text-slate-900 mt-1">$99.99</p>
+              <p className="text-sm font-medium text-slate-900 mt-1">{formData.price}</p>
             </div>
             <div>
               <p className="text-xs text-slate-500 uppercase tracking-wider">Created Date</p>
@@ -276,6 +277,7 @@ export function CourseOverview() {
           </div>
         </div>
       </div>
+      )}
 
       {/* Description */}
       {!isEditing && (
