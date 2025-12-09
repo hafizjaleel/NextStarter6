@@ -273,6 +273,12 @@ export function CourseLessons() {
                   muxVideo: '',
                   pdfFile: null,
                   downloadableFile: null,
+                  quizData: {
+                    questions: [],
+                    passingScore: 70,
+                    timeLimit: 0,
+                    maxAttempts: 0,
+                  },
                 });
               }}
               className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
