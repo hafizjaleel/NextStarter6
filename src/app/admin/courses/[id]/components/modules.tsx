@@ -167,7 +167,10 @@ export function CourseModules() {
                 <button className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600">
                   <Edit2 className="h-4 w-4" strokeWidth={2} />
                 </button>
-                <button className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-red-600">
+                <button
+                  onClick={() => handleDeleteModule(module.id)}
+                  className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-red-600"
+                >
                   <Trash2 className="h-4 w-4" strokeWidth={2} />
                 </button>
                 <ChevronRight className="h-5 w-5 text-slate-400" strokeWidth={2} />
