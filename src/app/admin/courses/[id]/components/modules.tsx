@@ -178,7 +178,13 @@ export function CourseModules() {
     const [draggedModule] = newModules.splice(draggedIndex, 1);
     newModules.splice(targetIndex, 0, draggedModule);
 
-    setModules(newModules);
+    // Update moduleOrder to reflect new positions
+    const modulesWithUpdatedOrder = newModules.map((module, index) => ({
+      ...module,
+      moduleOrder: index + 1,
+    }));
+
+    setModules(modulesWithUpdatedOrder);
     setDraggedId(null);
     setDragOverId(null);
   };
