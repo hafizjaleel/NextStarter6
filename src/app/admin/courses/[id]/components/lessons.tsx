@@ -75,7 +75,7 @@ const modules = [
 
 export function CourseLessons() {
   const [lessons, setLessons] = useState(initialLessons);
-  const [showForm, setShowForm] = useState(false);
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [selectedLessonIds, setSelectedLessonIds] = useState<number[]>([]);
   const [formData, setFormData] = useState({
