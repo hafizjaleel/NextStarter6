@@ -234,17 +234,35 @@ export function CourseModules() {
       <div className="space-y-3">
         {modules.map((module) => {
           const { lessonCount, duration } = getModuleStats(module.title);
+          const isDragging = draggedId === module.id;
+          const isDropTarget = dragOverId === module.id;
+
           return (
             <div
               key={module.id}
-              className="rounded-xl border border-slate-100 bg-white p-6 shadow-sm hover:shadow-md transition"
+              draggable
+              onDragStart={() => handleDragStart(module.id)}
+              onDragOver={() => handleDragOver(module.id)}
+              onDragLeave={handleDragLeave}
+              onDrop={() => handleDrop(module.id)}
+              onDragEnd={handleDragEnd}
+              className={`rounded-xl border bg-white p-6 shadow-sm transition ${
+                isDragging
+                  ? 'opacity-50 border-slate-200'
+                  : isDropTarget
+                    ? 'border-emerald-300 bg-emerald-50 shadow-md'
+                    : 'border-slate-100 hover:shadow-md'
+              }`}
             >
               <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <h4 className="text-base font-bold text-slate-900">{module.title}</h4>
-                  <div className="flex items-center gap-4 mt-2 text-sm text-slate-600">
-                    <span>{lessonCount} lesson{lessonCount !== 1 ? 's' : ''}</span>
-                    <span>{duration}</span>
+                <div className="flex items-center gap-3 flex-1">
+                  <GripVertical className="h-5 w-5 text-slate-400 flex-shrink-0 cursor-grab active:cursor-grabbing" strokeWidth={2} />
+                  <div className="flex-1">
+                    <h4 className="text-base font-bold text-slate-900">{module.title}</h4>
+                    <div className="flex items-center gap-4 mt-2 text-sm text-slate-600">
+                      <span>{lessonCount} lesson{lessonCount !== 1 ? 's' : ''}</span>
+                      <span>{duration}</span>
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
