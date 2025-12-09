@@ -1,6 +1,70 @@
-import { Badge } from 'lucide-react';
+'use client';
+
+import { useState } from 'react';
+import { Edit2, Save, X } from 'lucide-react';
 
 export function CourseOverview() {
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    title: 'Advanced React Development',
+    instructor: 'John Smith',
+    category: 'Development',
+    level: 'Advanced',
+    price: '$99.99',
+    description: 'Master React hooks, state management, and performance optimization. This comprehensive course covers everything you need to become a professional React developer. Learn best practices, design patterns, and real-world applications. From beginner fundamentals to advanced techniques, you\'ll gain hands-on experience through practical projects and real-world scenarios.',
+    thumbnail: null as File | null,
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setFormData((prev) => ({ ...prev, thumbnail: file }));
+    }
+  };
+
+  const handleSave = () => {
+    // In a real app, this would send data to an API
+    console.log('Saving course data:', formData);
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    setFormData({
+      title: 'Advanced React Development',
+      instructor: 'John Smith',
+      category: 'Development',
+      level: 'Advanced',
+      price: '$99.99',
+      description: 'Master React hooks, state management, and performance optimization. This comprehensive course covers everything you need to become a professional React developer. Learn best practices, design patterns, and real-world applications. From beginner fundamentals to advanced techniques, you\'ll gain hands-on experience through practical projects and real-world scenarios.',
+      thumbnail: null,
+    });
+  };
+
+  const getCategoryColor = (category: string) => {
+    const colors: Record<string, string> = {
+      Development: 'bg-blue-100 text-blue-700',
+      Design: 'bg-purple-100 text-purple-700',
+      Marketing: 'bg-pink-100 text-pink-700',
+      Business: 'bg-orange-100 text-orange-700',
+    };
+    return colors[category] || 'bg-blue-100 text-blue-700';
+  };
+
+  const getLevelColor = (level: string) => {
+    const colors: Record<string, string> = {
+      Beginner: 'bg-green-100 text-green-700',
+      Intermediate: 'bg-yellow-100 text-yellow-700',
+      Advanced: 'bg-orange-100 text-orange-700',
+    };
+    return colors[level] || 'bg-orange-100 text-orange-700';
+  };
+
   return (
     <div className="space-y-6">
       {/* Thumbnail & Header Card */}
