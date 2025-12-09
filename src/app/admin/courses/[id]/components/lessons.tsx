@@ -366,11 +366,23 @@ export function CourseLessons() {
                 type="submit"
                 className="rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-emerald-700"
               >
-                Add Lesson
+                {editingId !== null ? 'Update Lesson' : 'Add Lesson'}
               </button>
               <button
                 type="button"
-                onClick={() => setShowForm(false)}
+                onClick={() => {
+                  setShowForm(false);
+                  setEditingId(null);
+                  setFormData({
+                    title: '',
+                    type: 'video',
+                    duration: '',
+                    module: modules[0],
+                    muxVideo: '',
+                    pdfFile: null,
+                    downloadableFile: null,
+                  });
+                }}
                 className="rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
               >
                 Cancel
