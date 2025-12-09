@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Video, FileText, Plus, Edit2, Trash2, Lock, X } from 'lucide-react';
+import { Video, FileText, Plus, Edit2, Trash2, Lock, X, HelpCircle } from 'lucide-react';
+import { QuizForm, type QuizData, type Question } from './quiz-form';
 
 const initialLessons = [
   {
