@@ -66,6 +66,10 @@ export function CourseModules() {
   const [lessons] = useState(initialLessons);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; id: number | null }>({
+    isOpen: false,
+    id: null,
+  });
   const [formData, setFormData] = useState({
     title: '',
   });
