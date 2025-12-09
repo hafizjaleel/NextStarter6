@@ -292,76 +292,124 @@ export function CourseLessons({ courseId }: CourseLessonsProps) {
     }
   };
 
-  const handleDeleteLesson = (id: number) => {
+  const handleDeleteLesson = (id: string | number) => {
     setDeleteConfirm({ isOpen: true, id });
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (deleteConfirm.id !== null) {
-      setLessons(lessons.filter((l) => l.id !== deleteConfirm.id));
-      setDeleteConfirm({ isOpen: false, id: null });
+      try {
+        const response = await fetch(`/api/v1/course/lesson/delete/${deleteConfirm.id}`, {
+          method: 'DELETE',
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to delete lesson');
+        }
+
+        setLessons(lessons.filter((l) => l.id !== deleteConfirm.id));
+        setDeleteConfirm({ isOpen: false, id: null });
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred');
+      }
     }
   };
 
-  const handleToggleStatus = (id: number) => {
-    setLessons(
-      lessons.map((lesson) =>
-        lesson.id === id ? { ...lesson, published: !lesson.published } : lesson,
-      ),
-    );
+  const handleToggleStatus = async (id: string | number) => {
+    const lesson = lessons.find((l) => l.id === id);
+    if (!lesson) return;
+
+    try {
+      const response = await fetch(`/api/v1/course/lesson/update/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ published: !lesson.published }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update lesson');
+      }
+
+      setLessons(
+        lessons.map((l) =>
+          l.id === id ? { ...l, published: !l.published } : l,
+        ),
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    }
   };
 
-  const handleSelectLesson = (id: number) => {
+  const handleSelectLesson = (id: string | number) => {
     setSelectedLessonIds((prev) =>
       prev.includes(id) ? prev.filter((lid) => lid !== id) : [...prev, id],
     );
   };
 
-  const handleSelectAllInModule = (moduleName: string) => {
-    const moduleIds = lessons
-      .filter((l) => l.module === moduleName)
+  const handleSelectAllInModule = (moduleId: string | number) => {
+    const moduleLessonIds = lessons
+      .filter((l) => l.moduleId === moduleId)
       .map((l) => l.id);
-    const allSelected = moduleIds.every((id) => selectedLessonIds.includes(id));
+    const allSelected = moduleLessonIds.every((id) => selectedLessonIds.includes(id));
 
     if (allSelected) {
       setSelectedLessonIds((prev) =>
-        prev.filter((id) => !moduleIds.includes(id)),
+        prev.filter((id) => !moduleLessonIds.includes(id)),
       );
     } else {
-      setSelectedLessonIds((prev) => [...prev, ...moduleIds.filter((id) => !prev.includes(id))]);
+      setSelectedLessonIds((prev) => [
+        ...prev,
+        ...moduleLessonIds.filter((id) => !prev.includes(id)),
+      ]);
     }
   };
 
-  const handleBulkStatusChange = (status: boolean) => {
-    setLessons(
-      lessons.map((lesson) =>
-        selectedLessonIds.includes(lesson.id)
-          ? { ...lesson, published: status }
-          : lesson,
-      ),
-    );
-    setSelectedLessonIds([]);
+  const handleBulkStatusChange = async (status: boolean) => {
+    try {
+      await Promise.all(
+        selectedLessonIds.map((id) =>
+          fetch(`/api/v1/course/lesson/update/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ published: status }),
+          }),
+        ),
+      );
+
+      setLessons(
+        lessons.map((lesson) =>
+          selectedLessonIds.includes(lesson.id)
+            ? { ...lesson, published: status }
+            : lesson,
+        ),
+      );
+      setSelectedLessonIds([]);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    }
   };
 
   const groupedLessons = modules.reduce(
     (acc, module) => {
-      acc[module] = lessons.filter((l) => l.module === module);
+      acc[module.id] = lessons
+        .filter((l) => l.moduleId === module.id)
+        .sort((a, b) => a.lessonOrder - b.lessonOrder);
       return acc;
     },
-    {} as Record<string, typeof lessons>,
+    {} as Record<string | number, Lesson[]>,
   );
 
   const handleClosePanel = () => {
     setIsPanelOpen(false);
     setEditingId(null);
+    const defaultModuleId = modules.length > 0 ? modules[0].id : '';
     setFormData({
       title: '',
-      type: 'video',
-      duration: '',
-      module: modules[0],
-      muxVideo: '',
-      pdfFile: null,
-      downloadableFile: null,
+      lessonType: 'video',
+      moduleId: defaultModuleId,
+      lessonOrder: '',
+      muxUrl: '',
+      uploadedFiles: [],
       quizData: {
         questions: [],
         passingScore: 70,
