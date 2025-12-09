@@ -9,14 +9,17 @@ const initialModules = [
   {
     id: 1,
     title: 'Getting Started with React',
+    moduleOrder: 1,
   },
   {
     id: 2,
     title: 'React Hooks Deep Dive',
+    moduleOrder: 2,
   },
   {
     id: 3,
     title: 'State Management',
+    moduleOrder: 3,
   },
 ];
 
