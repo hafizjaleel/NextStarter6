@@ -85,6 +85,12 @@ export function CourseLessons() {
     muxVideo: '',
     pdfFile: null as File | null,
     downloadableFile: null as File | null,
+    quizData: {
+      questions: [],
+      passingScore: 70,
+      timeLimit: 0,
+      maxAttempts: 0,
+    } as QuizData,
   });
 
   const handleInputChange = (
