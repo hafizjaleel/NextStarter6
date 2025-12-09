@@ -278,6 +278,58 @@ export function CourseLessons() {
     });
   };
 
+  const handleDragStart = (id: number) => {
+    setDraggedId(id);
+  };
+
+  const handleDragOver = (id: number) => {
+    setDragOverId(id);
+  };
+
+  const handleDragLeave = () => {
+    setDragOverId(null);
+  };
+
+  const handleDrop = (targetId: number) => {
+    if (draggedId === null || draggedId === targetId) {
+      setDraggedId(null);
+      setDragOverId(null);
+      return;
+    }
+
+    const draggedLesson = lessons.find((l) => l.id === draggedId);
+    const targetLesson = lessons.find((l) => l.id === targetId);
+
+    if (!draggedLesson || !targetLesson) {
+      setDraggedId(null);
+      setDragOverId(null);
+      return;
+    }
+
+    // Only allow reordering within the same module
+    if (draggedLesson.module !== targetLesson.module) {
+      setDraggedId(null);
+      setDragOverId(null);
+      return;
+    }
+
+    const draggedIndex = lessons.findIndex((l) => l.id === draggedId);
+    const targetIndex = lessons.findIndex((l) => l.id === targetId);
+
+    const newLessons = [...lessons];
+    const [movedLesson] = newLessons.splice(draggedIndex, 1);
+    newLessons.splice(targetIndex, 0, movedLesson);
+
+    setLessons(newLessons);
+    setDraggedId(null);
+    setDragOverId(null);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedId(null);
+    setDragOverId(null);
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex justify-end">
