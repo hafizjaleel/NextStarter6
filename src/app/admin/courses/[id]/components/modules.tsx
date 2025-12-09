@@ -275,8 +275,23 @@ export function CourseModules({ courseId }: CourseModulesProps) {
     setDragOverId(null);
   };
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="text-center">
+          <p className="text-slate-600">Loading modules...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
+      {error && (
+        <div className="rounded-lg border border-red-200 bg-red-50 p-4">
+          <p className="text-sm text-red-700">{error}</p>
+        </div>
+      )}
       <div className="flex justify-end">
         <button
           onClick={() => {
