@@ -247,10 +247,10 @@ export function CourseModules() {
             <div
               key={module.id}
               draggable
-              onDragStart={() => handleDragStart(module.id)}
-              onDragOver={() => handleDragOver(module.id)}
-              onDragLeave={handleDragLeave}
-              onDrop={() => handleDrop(module.id)}
+              onDragStart={(e) => handleDragStart(module.id, e)}
+              onDragOver={(e) => handleDragOver(module.id, e)}
+              onDragLeave={(e) => handleDragLeave(e)}
+              onDrop={(e) => handleDrop(module.id, e)}
               onDragEnd={handleDragEnd}
               className={`rounded-xl border bg-white p-6 shadow-sm transition ${
                 isDragging
