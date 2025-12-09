@@ -187,7 +187,8 @@ export function CourseLessons() {
                   className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 transition focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
                 >
                   <option value="video">Video</option>
-                  <option value="document">Document</option>
+                  <option value="pdf">PDF</option>
+                  <option value="downloadable">Downloadable Content</option>
                 </select>
               </div>
               <div>
@@ -206,6 +207,67 @@ export function CourseLessons() {
                 />
               </div>
             </div>
+
+            {formData.type === 'video' && (
+              <div>
+                <label htmlFor="muxVideo" className="block text-sm font-medium text-slate-900 mb-1">
+                  Mux Video URL or Asset ID
+                </label>
+                <input
+                  id="muxVideo"
+                  name="muxVideo"
+                  type="text"
+                  value={formData.muxVideo}
+                  onChange={handleInputChange}
+                  placeholder="e.g., https://image.mux.com/... or asset ID"
+                  className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-500 transition focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  required
+                />
+              </div>
+            )}
+
+            {formData.type === 'pdf' && (
+              <div>
+                <label htmlFor="pdfFile" className="block text-sm font-medium text-slate-900 mb-1">
+                  PDF File Upload
+                </label>
+                <div className="relative">
+                  <input
+                    id="pdfFile"
+                    name="pdfFile"
+                    type="file"
+                    accept=".pdf"
+                    onChange={handleFileChange}
+                    className="block w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 transition focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer file:mr-4 file:bg-emerald-50 file:border-0 file:px-3 file:py-1.5 file:rounded-md file:text-sm file:font-medium file:text-emerald-700 hover:file:bg-emerald-100"
+                    required
+                  />
+                </div>
+                {formData.pdfFile && (
+                  <p className="mt-2 text-xs text-slate-600">Selected: {formData.pdfFile.name}</p>
+                )}
+              </div>
+            )}
+
+            {formData.type === 'downloadable' && (
+              <div>
+                <label htmlFor="downloadableFile" className="block text-sm font-medium text-slate-900 mb-1">
+                  Downloadable File Upload
+                </label>
+                <div className="relative">
+                  <input
+                    id="downloadableFile"
+                    name="downloadableFile"
+                    type="file"
+                    onChange={handleFileChange}
+                    className="block w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 transition focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer file:mr-4 file:bg-emerald-50 file:border-0 file:px-3 file:py-1.5 file:rounded-md file:text-sm file:font-medium file:text-emerald-700 hover:file:bg-emerald-100"
+                    required
+                  />
+                </div>
+                {formData.downloadableFile && (
+                  <p className="mt-2 text-xs text-slate-600">Selected: {formData.downloadableFile.name}</p>
+                )}
+              </div>
+            )}
 
             <div className="flex gap-3 pt-2">
               <button
