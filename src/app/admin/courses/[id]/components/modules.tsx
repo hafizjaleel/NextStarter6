@@ -169,11 +169,15 @@ export function CourseModules() {
                 type="submit"
                 className="rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-emerald-700"
               >
-                Add Module
+                {editingId !== null ? 'Update Module' : 'Add Module'}
               </button>
               <button
                 type="button"
-                onClick={() => setShowForm(false)}
+                onClick={() => {
+                  setShowForm(false);
+                  setEditingId(null);
+                  setFormData({ title: '' });
+                }}
                 className="rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
               >
                 Cancel
