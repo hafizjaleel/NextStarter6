@@ -278,12 +278,28 @@ export function CourseOverview() {
       </div>
 
       {/* Description */}
-      <div className="rounded-xl border border-slate-100 bg-white p-6 shadow-sm">
-        <h3 className="text-lg font-bold text-slate-900 mb-3">Course Description</h3>
-        <p className="text-sm text-slate-600 leading-relaxed">
-          Master React hooks, state management, and performance optimization. This comprehensive course covers everything you need to become a professional React developer. Learn best practices, design patterns, and real-world applications. From beginner fundamentals to advanced techniques, you'll gain hands-on experience through practical projects and real-world scenarios.
-        </p>
-      </div>
+      {!isEditing && (
+        <div className="rounded-xl border border-slate-100 bg-white p-6 shadow-sm">
+          <h3 className="text-lg font-bold text-slate-900 mb-3">Course Description</h3>
+          <p className="text-sm text-slate-600 leading-relaxed">
+            {formData.description}
+          </p>
+        </div>
+      )}
+
+      {isEditing && (
+        <div className="rounded-xl border border-slate-100 bg-white p-6 shadow-sm">
+          <h3 className="text-lg font-bold text-slate-900 mb-4">Course Description</h3>
+          <textarea
+            name="description"
+            value={formData.description}
+            onChange={handleInputChange}
+            rows={5}
+            className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 transition focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"
+            placeholder="Enter course description"
+          />
+        </div>
+      )}
 
       {/* Course Preview */}
       <div className="rounded-xl border border-slate-100 bg-white p-6 shadow-sm">
