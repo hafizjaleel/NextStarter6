@@ -608,6 +608,17 @@ export function CourseLessons() {
           );
         })}
       </div>
+
+      <ConfirmDialog
+        isOpen={deleteConfirm.isOpen}
+        title="Delete Lesson?"
+        message="This action cannot be undone. The lesson and all its content will be permanently deleted."
+        confirmText="Delete"
+        cancelText="Cancel"
+        isDangerous={true}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setDeleteConfirm({ isOpen: false, id: null })}
+      />
     </div>
   );
 }
