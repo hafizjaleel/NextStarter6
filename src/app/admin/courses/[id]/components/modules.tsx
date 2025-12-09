@@ -1,6 +1,9 @@
-import { ChevronRight, Plus, Edit2, Trash2 } from 'lucide-react';
+'use client';
 
-const modules = [
+import { useState } from 'react';
+import { ChevronRight, Plus, Edit2, Trash2, X } from 'lucide-react';
+
+const initialModules = [
   {
     id: 1,
     title: 'Getting Started with React',
@@ -22,14 +25,129 @@ const modules = [
 ];
 
 export function CourseModules() {
+  const [modules, setModules] = useState(initialModules);
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState({
+    title: '',
+    lessons: '',
+    duration: '',
+  });
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleAddModule = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (formData.title && formData.lessons && formData.duration) {
+      const newModule = {
+        id: Math.max(...modules.map((m) => m.id), 0) + 1,
+        title: formData.title,
+        lessons: parseInt(formData.lessons),
+        duration: formData.duration,
+      };
+      setModules([...modules, newModule]);
+      setFormData({ title: '', lessons: '', duration: '' });
+      setShowForm(false);
+    }
+  };
+
+  const handleDeleteModule = (id: number) => {
+    setModules(modules.filter((m) => m.id !== id));
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex justify-end">
-        <button className="flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-emerald-700">
+        <button
+          onClick={() => setShowForm(!showForm)}
+          className="flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-emerald-700"
+        >
           <Plus className="h-4 w-4" strokeWidth={2} />
           Add Module
         </button>
       </div>
+
+      {showForm && (
+        <div className="rounded-xl border border-slate-100 bg-white p-6 shadow-sm">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-base font-bold text-slate-900">Add New Module</h3>
+            <button
+              onClick={() => setShowForm(false)}
+              className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
+            >
+              <X className="h-4 w-4" strokeWidth={2} />
+            </button>
+          </div>
+          <form onSubmit={handleAddModule} className="space-y-4">
+            <div>
+              <label htmlFor="title" className="block text-sm font-medium text-slate-900 mb-1">
+                Module Title
+              </label>
+              <input
+                id="title"
+                name="title"
+                type="text"
+                value={formData.title}
+                onChange={handleInputChange}
+                placeholder="e.g., Getting Started with React"
+                className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-500 transition focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                required
+              />
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label htmlFor="lessons" className="block text-sm font-medium text-slate-900 mb-1">
+                  Number of Lessons
+                </label>
+                <input
+                  id="lessons"
+                  name="lessons"
+                  type="number"
+                  value={formData.lessons}
+                  onChange={handleInputChange}
+                  placeholder="e.g., 5"
+                  className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-500 transition focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="duration" className="block text-sm font-medium text-slate-900 mb-1">
+                  Duration
+                </label>
+                <input
+                  id="duration"
+                  name="duration"
+                  type="text"
+                  value={formData.duration}
+                  onChange={handleInputChange}
+                  placeholder="e.g., 2h 30m"
+                  className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-500 transition focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  required
+                />
+              </div>
+            </div>
+            <div className="flex gap-3 pt-2">
+              <button
+                type="submit"
+                className="rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-emerald-700"
+              >
+                Add Module
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowForm(false)}
+                className="rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
 
       <div className="space-y-3">
         {modules.map((module) => (
