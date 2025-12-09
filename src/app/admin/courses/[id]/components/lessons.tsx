@@ -445,6 +445,12 @@ export function CourseLessons() {
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3 flex-1">
+                        <input
+                          type="checkbox"
+                          checked={selectedLessonIds.includes(lesson.id)}
+                          onChange={() => handleSelectLesson(lesson.id)}
+                          className="h-4 w-4 rounded border-slate-300 text-emerald-600 transition cursor-pointer"
+                        />
                         {lesson.type === 'video' ? (
                           <Video className="h-5 w-5 text-blue-600 flex-shrink-0" strokeWidth={2} />
                         ) : lesson.type === 'pdf' ? (
