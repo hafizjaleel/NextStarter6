@@ -1,98 +1,55 @@
 'use client';
 
-import { useState } from 'react';
-import { Video, FileText, Plus, Edit2, Trash2, Lock, HelpCircle, GripVertical } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Video, FileText, Plus, Edit2, Trash2, Lock, HelpCircle, GripVertical, Music, FileCode, Zap } from 'lucide-react';
 import { SidePanel } from '@/components/side-panel';
 import { ConfirmDialog } from '@/components/confirm-dialog';
 import { QuizForm, type QuizData, type Question } from './quiz-form';
 
-const initialLessons: Array<{
-  id: number;
+interface Module {
+  id: number | string;
   title: string;
-  type: 'video' | 'pdf' | 'downloadable' | 'quiz';
-  duration: string;
-  module: string;
+  moduleOrder: number;
+}
+
+interface Lesson {
+  id: number | string;
+  title: string;
+  lessonType: 'video' | 'pdf' | 'audio' | 'file' | 'text' | 'quiz';
+  moduleId: number | string;
+  lessonOrder: number;
+  files?: Array<{ id: string; name: string; url: string }>;
+  muxUrl?: string;
   published: boolean;
   quizData?: QuizData;
-}> = [
-  {
-    id: 1,
-    title: 'Introduction to React',
-    type: 'video',
-    duration: '15m',
-    module: 'Getting Started with React',
-    published: true,
-  },
-  {
-    id: 2,
-    title: 'Setting Up Your Environment',
-    type: 'video',
-    duration: '20m',
-    module: 'Getting Started with React',
-    published: true,
-  },
-  {
-    id: 3,
-    title: 'React Basics Quiz',
-    type: 'quiz',
-    duration: '15m',
-    module: 'Getting Started with React',
-    published: false,
-    quizData: {
-      questions: [
-        {
-          id: 1,
-          text: 'What is React?',
-          type: 'multiple-choice',
-          answers: [
-            { id: 1, text: 'A JavaScript library' },
-            { id: 2, text: 'A programming language' },
-            { id: 3, text: 'A CSS framework' },
-          ],
-          correctAnswers: [1],
-          feedback: 'Correct! React is a JavaScript library for building user interfaces.',
-        },
-      ],
-      passingScore: 70,
-      timeLimit: 15,
-      maxAttempts: 3,
-    },
-  },
-  {
-    id: 4,
-    title: 'useState Hook Tutorial',
-    type: 'video',
-    duration: '25m',
-    module: 'React Hooks Deep Dive',
-    published: true,
-  },
-];
+}
 
-const modules = [
-  'Getting Started with React',
-  'React Hooks Deep Dive',
-  'State Management',
-];
+interface CourseLessonsProps {
+  courseId: string;
+}
 
-export function CourseLessons() {
-  const [lessons, setLessons] = useState(initialLessons);
+export function CourseLessons({ courseId }: CourseLessonsProps) {
+  const [lessons, setLessons] = useState<Lesson[]>([]);
+  const [modules, setModules] = useState<Module[]>([]);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
-  const [editingId, setEditingId] = useState<number | null>(null);
-  const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; id: number | null }>({
+  const [editingId, setEditingId] = useState<number | string | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; id: number | string | null }>({
     isOpen: false,
     id: null,
   });
-  const [selectedLessonIds, setSelectedLessonIds] = useState<number[]>([]);
-  const [draggedId, setDraggedId] = useState<number | null>(null);
-  const [dragOverId, setDragOverId] = useState<number | null>(null);
+  const [selectedLessonIds, setSelectedLessonIds] = useState<(number | string)[]>([]);
+  const [draggedId, setDraggedId] = useState<number | string | null>(null);
+  const [dragOverId, setDragOverId] = useState<number | string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
-    type: 'video',
-    duration: '',
-    module: modules[0],
-    muxVideo: '',
-    pdfFile: null as File | null,
-    downloadableFile: null as File | null,
+    lessonType: 'video' as 'video' | 'pdf' | 'audio' | 'file' | 'text' | 'quiz',
+    moduleId: '' as string | number,
+    lessonOrder: '',
+    muxUrl: '',
+    uploadedFiles: [] as Array<{ id: string; name: string }>,
     quizData: {
       questions: [],
       passingScore: 70,
@@ -100,6 +57,37 @@ export function CourseLessons() {
       maxAttempts: 0,
     } as QuizData,
   });
+
+  // Fetch modules and lessons on mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const [modulesRes, lessonsRes] = await Promise.all([
+          fetch(`/api/v1/course/${courseId}/modules`),
+          fetch(`/api/v1/course/${courseId}/lessons`),
+        ]);
+
+        if (!modulesRes.ok || !lessonsRes.ok) {
+          throw new Error('Failed to fetch data');
+        }
+
+        const modulesData = await modulesRes.json();
+        const lessonsData = await lessonsRes.json();
+
+        setModules(modulesData.modules || []);
+        setLessons(lessonsData.lessons || []);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [courseId]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
